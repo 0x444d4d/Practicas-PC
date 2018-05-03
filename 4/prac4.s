@@ -3,20 +3,22 @@
 # David Martín Martín. alu0101053318@ull.edu.es
 
 
-m=5
-n=4
+m=3
+n=3
 size=4
 
 .data
 
 title:       .asciiz "Practica 4 de PC.\n\n"
 perimstr:    .asciiz "El valor del perimetro es: "
+cuadrada:    .asciiz "La matriz es cuadrada\n"
+nocuadrada:  .asciiz "La matriz no es cuadrada\n"
 newline:     .asciiz "\n"
 perim:       .word   0
 
-m1:          .word   1, 2, 3, 4, 5
-             .word   1, 2, 3, 4, 5 
-             .word   1, 2, 3, 4, 5
+m1:          .word   1, 2, 3
+             .word   1, 2, 3
+             .word   1, 2, 3
              .word   1, 2, 3, 4, 5
 
 
@@ -26,6 +28,23 @@ main:
 li $v0, 4
 la $a0, title
 syscall
+
+li $t7, m
+li $t6, n
+bne $t7, $t6, noteq
+
+li $v0, 4
+la $a0, cuadrada
+syscall
+j programa
+
+noteq:
+li $v0, 4
+la $a0, nocuadrada
+syscall
+
+
+programa:
 
 lw $t4 ,perim
 la $t0, m1
