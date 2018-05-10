@@ -5,7 +5,7 @@
 
 
 #Las etiquetas escritas en mayuscula determinan funciones
-#$t8 = tebla de saltos; $s0 = opcion del switch;
+#$t8 = tebla de saltos; $s0 = opcion del switch; $a1 y $a2 = valores introducidos por el usuario; $t0 = registro de cambio
 
 .data
   menustr0:   .asciiz     "\t\tMenu\n"
