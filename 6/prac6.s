@@ -11,7 +11,8 @@
   menustr0:   .asciiz     "\t\tMenu\n"
   menustr1:   .asciiz     "1.- Cargar datos.\n"
   menustr2:   .asciiz     "2.- Calcular MCD.\n"
-  menustr3:   .asciiz     "0.- Terminar programa.\n"
+  menustr3:   .asciiz     "3.- DUMMY.\n"
+  menustr4:   .asciiz     "0.- Terminar programa.\n"
   chkstr0:    .asciiz     "La opcion introducida no es valida, pruebe otro numero.\n"
   jumptable:  .word       L0, L1, L2, L3
   
@@ -74,9 +75,13 @@ PRINTMENU:
   li $v0, 4
   la $a0, menustr2
   syscall
-
+  
   li $v0, 4
   la $a0, menustr3
+  syscall
+  
+  li $v0, 4
+  la $a0, menustr4
   syscall
 
   jr $ra
