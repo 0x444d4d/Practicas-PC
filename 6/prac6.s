@@ -122,10 +122,10 @@ EUCLIDES:
   jr $ra
 
   mcd:
-    addi $sp, -24
-    sw $ra, 0($sp)
-    sw $a1, 8($sp)
-    sw $a2, 16($sp)
+ #   addi $sp, -24
+ #   sw $ra, 0($sp)
+ #   sw $a1, 8($sp)
+ #   sw $a2, 16($sp)
   
     move $t0, $a1
     div $a1, $a2
