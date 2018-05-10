@@ -10,8 +10,9 @@
 .data
   menustr0:   .asciiz     "\t\tMenu\n"
   menustr1:   .asciiz     "1.- Cargar datos.\n"
-  menustr2:   .asciiz     "2.- Calcular mcm.\n"
+  menustr2:   .asciiz     "2.- Calcular MCD.\n"
   menustr3:   .asciiz     "0.- Terminar programa.\n"
+  chkstr0:    .asciiz     "La opcion introducida no es valida, pruebe otro numero.\n"
   jumptable:  .word       L0, L1, L2, L3
   
 
@@ -28,6 +29,9 @@ li $v0, 5
 syscall
 move $s0, $v0
 
+#Comprobamos que dicho entero se ajusta a las opciones del menu.
+jal CHECKOPT
+
 #Operamos con el entero recibido y la tabla de saltos para realizar el salto
 #a la funcion seleccionada.
 sll $s0, $s0, 2
@@ -37,11 +41,14 @@ jr $s0
 
 L1: #case 1:
 #Saltamos a la funcion LOADDATA que nos devolvera
-#los datos introducidos por el usuario en $a0 y $a1.
+#los datos introducidos por el usuario en $a1 y $a2.
 jal LOADDATA 
 j main2
 
 L2: #case 2:
+addi $sp, -16
+jal EUCLIDES
+addi $sp, 16
 j main2
 
 L3: #case 3:
@@ -75,8 +82,52 @@ PRINTMENU:
   jr $ra
 
 
+CHECKOPT:
+
+  blt $s0, 0, notvalid 
+  bgt $s0, 3, notvalid
+
+  jr $ra
+ 
+  notvalid:
+  li $v0, 4
+  la $a0, chkstr0
+  syscall
+  
+  j main2
+
+
 LOADDATA:
 
   li $v0, 1
+  syscall
+  move $a1, $v0
+
   li $v0, 1
+  syscall
+  move $a2, $v0
+
   jr $ra
+
+
+EUCLIDES:
+ 
+  bne $a2, $zero, mcd
+  add $v0, $a1, $zero
+  jr $ra
+
+  mcd:
+    addi $sp, -24
+    sw $ra, 0($sp)
+    sw $a1, 8($sp)
+    sw $a2, 16($sp)
+  
+    move $t0, $a1
+    div $a1, $a2
+    move $a1, $a2
+    mfhi $a2
+
+    jal EUCLIDES
+ 
+ 
+ jr $ra
