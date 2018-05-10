@@ -8,11 +8,13 @@
 #$t8 = tebla de saltos; $s0 = opcion del switch; $a1 y $a2 = valores introducidos por el usuario; $t0 = registro de cambio
 
 .data
-  menustr0:   .asciiz     "\t\tMenu\n"
+  menustr0:   .asciiz     "\n\tMenu\n"
   menustr1:   .asciiz     "1.- Cargar datos.\n"
   menustr2:   .asciiz     "2.- Calcular MCD.\n"
   menustr3:   .asciiz     "3.- DUMMY.\n"
   menustr4:   .asciiz     "0.- Terminar programa.\n"
+  resstr0:    .asciiz     "\nEl resultado es:"
+  newline:    .asciiz     "\n"
   chkstr0:    .asciiz     "La opcion introducida no es valida, pruebe otro numero.\n"
   jumptable:  .word       L0, L1, L2, L3
   
@@ -50,6 +52,12 @@ L2: #case 2:
 addi $sp, -16
 jal EUCLIDES
 addi $sp, 16
+
+move $a0, $v0
+
+jal PRINTRES
+
+
 j main2
 
 L3: #case 3:
@@ -104,11 +112,11 @@ CHECKOPT:
 
 LOADDATA:
 
-  li $v0, 1
+  li $v0, 5
   syscall
   move $a1, $v0
 
-  li $v0, 1
+  li $v0, 5
   syscall
   move $a2, $v0
 
@@ -118,21 +126,49 @@ LOADDATA:
 EUCLIDES:
  
   bne $a2, $zero, mcd
-  add $v0, $a1, $zero
+  move $v0, $a1
   jr $ra
 
   mcd:
- #   addi $sp, -24
- #   sw $ra, 0($sp)
- #   sw $a1, 8($sp)
- #   sw $a2, 16($sp)
+    addi $sp, -24
+    sw $ra, 0($sp)
   
     move $t0, $a1
     div $a1, $a2
     move $a1, $a2
     mfhi $a2
 
-    jal EUCLIDES
- 
- 
- jr $ra
+    jal EUCLIDES 
+
+    lw $ra, 0($sp)
+    addi $sp, 24
+
+  jr $ra 
+
+
+PRINTRES:
+
+  move $t0, $a0
+
+  li $v0, 4
+  la $a0, resstr0
+  syscall
+
+  li $v0, 1
+  move $a0, $t0
+  syscall
+  
+  move $s2, $ra
+  jal NEWLINE
+  move $ra, $s2
+
+  jr $ra
+
+
+NEWLINE:
+
+  li $v0, 4
+  la $a0, newline
+  syscall
+
+  jr $ra
